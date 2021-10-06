@@ -1,0 +1,285 @@
+---
+title: "AnovaProblems"
+author: "Prithi"
+date: "April 6, 2019"
+output: html_document
+---
+
+```{r}
+eg01 <- data.frame("A" = c(3,1,2), "B" = c(5,2,3), "C" = c(2,1,3))
+eg01
+# merge data
+#install.packages("reshape")
+library(reshape)
+eg01.m = melt(eg01, measure.vars = c("A", "B","C"))
+View(eg01.m)
+# summary stats
+#install.packages("dplyr")
+library(dplyr)
+group_by(eg01.m, variable) %>%
+  summarise(
+    count = n(),
+    mean = mean(value, na.rm = TRUE),
+    sd = sd(value, na.rm = TRUE)
+  )
+# Graphical visualization - boxplot
+library(ggplot2)
+ggplot(eg01.m) + geom_boxplot(aes(x=variable, y=value, fill=variable))
+# One way ANOVA
+res.aov <- aov(value ~ variable, data = eg01.m)
+# Summary of the analysis
+summary(res.aov)
+
+# The output includes the columns F value and Pr(>F) corresponding to the p-value of the test.
+# Interpret the result of one-way ANOVA tests
+# As the p-value is greater than the significance level 0.05, we can conclude that there is NO significant differences between the groups.
+
+#**************************************************************
+
+```
+
+```{r}
+college<- data.frame("College1" = c(18,15,17,0,15,9,14,18,8,12), "College2" = c(19,9,6,8,13,19,13,14,4,5), "College3" = c(12,20,15,20,2,14,13,12,1,4))
+college
+# merge data
+#install.packages("reshape")
+library(reshape)
+college.m = melt(college, measure.vars = c("College1", "College2","College3"))
+View(college.m)
+# summary stats
+library(dplyr)
+group_by(college.m, variable) %>%
+  summarise(
+    count = n(),
+    mean = mean(value, na.rm = TRUE),
+    sd = sd(value, na.rm = TRUE)
+  )
+# Graphical visualization - boxplot
+library(ggplot2)
+ggplot(college.m) + geom_boxplot(aes(x=variable, y=value, fill=variable))
+# One way ANOVA
+res.aov <- aov(value ~ variable, data = college.m)
+# Summary of the analysis
+summary(res.aov)
+
+# The output includes the columns F value and Pr(>F) corresponding to the p-value of the test.
+# Interpret the result of one-way ANOVA tests
+# As the p-value is greater than the significance level 0.05, we can conclude that there is NO significant differences between the groups.
+
+#****************************************************************
+
+```
+
+```{r}
+# Problem01:
+vineyard<- data.frame("yr_1996" = c(30000,34000,36000,38000,40000), "yr_1997" = c(30000,35000,37000,38000,40000), "yr_1998" = c(40000,41000,43000,44000,50000))
+vineyard
+# merge data
+#install.packages("reshape")
+library(reshape)
+vineyard.m = melt(vineyard, measure.vars = c("yr_1996", "yr_1997","yr_1998"))
+View(vineyard.m)
+# rename columns
+names(vineyard.m) = c("Year","Price")
+
+# summary stats
+library(dplyr)
+group_by(vineyard.m, Year) %>%
+  summarise(
+    count = n(),
+    mean = mean(Price, na.rm = TRUE),
+    sd = sd(Price, na.rm = TRUE)
+  )
+# Graphical visualization - boxplot
+library(ggplot2)
+ggplot(vineyard.m) + geom_boxplot(aes(x=Year, y=Price, fill=Price))
+# One way ANOVA
+res.aov <- aov(Price ~ Year, data = vineyard.m)
+# Summary of the analysis
+summary(res.aov)
+
+# The output includes the columns F value and Pr(>F) corresponding to the p-value of the test.
+# Interpret the result of one-way ANOVA tests
+# As the p-value is less than the significance level 0.05, we accept H1 - the mean of atleast one group is different.
+# We can conclude that there are significant differences between the groups.
+
+#*********** @ alpha = 1%
+# As the p-value is greater than the significance level 0.01, we accept H0.
+# At the 0.01 level, there is not enough evidence to accept/reject the null hypothesis. 
+# We cannot conclude that the mean price per acre was different or the same in these years.
+
+#****************************************************************
+
+```
+
+```{r}
+# Problem02:
+storage<- data.frame("month0" = c(58.75, 57.94, 58.91, 56.85, 55.21, 57.30), 
+                     "month1" = c(58.87, 56.43, 56.51, 57.67, 59.75, 58.48), 
+                     "month2" = c(59.13, 60.38, 58.01, 59.95, 59.51, 60.34),
+                     "month3" = c(62.32, 58.76, 60.03, 59.36, 59.61, 61.95))
+storage
+# merge data
+#install.packages("reshape")
+library(reshape)
+storage.m = melt(storage, measure.vars = c("month0", "month1","month2", "month3"))
+View(storage.m)
+# rename columns
+names(storage.m) = c("month","value")
+
+# summary stats
+library(dplyr)
+group_by(storage.m, month) %>%
+  summarise(
+    count = n(),
+    mean = mean(value, na.rm = TRUE),
+    sd = sd(value, na.rm = TRUE)
+  )
+# Graphical visualization - boxplot
+library(ggplot2)
+ggplot(storage.m) + geom_boxplot(aes(x=month, y=value, fill=month))
+# One way ANOVA
+res.aov <- aov(value ~ month, data = storage.m)
+# Summary of the analysis
+summary(res.aov)
+
+# The output includes the columns F value and Pr(>F) corresponding to the p-value of the test.
+# Interpret the result of one-way ANOVA tests
+# As the p-value is less than the significance level 0.05, we accept H1 - the mean of atleast one group is different.
+# We can conclude that there are significant differences between the groups.
+
+#****************************************************************
+
+```
+
+```{r}
+# Problem03:
+mean03 <- c(25.8, 22.68, 21.29)
+sd03 <- c(2.56, 3.67, 2.76)
+n03 <- c(31,31,14)
+vehicle<- data.frame(mean03,sd03,n03)
+vehicle
+
+#install.packages("rpsychi")
+library(rpsychi)
+with(vehicle, ind.oneway.second(mean03,sd03,n03))
+
+# The output includes the F value. 
+#Calculate the pvalue using pf(fvalue,dfbetween, dfwithin, loer.tail=F)
+
+pf(13.056, 2, 73, lower.tail=F)
+
+# Interpret the result:
+# As the p-value is less than the significance level 0.05, we accept H1 - the mean of atleast one group is different.
+# We can conclude that there are significant differences between the groups.
+
+#****************************************************************
+
+```
+
+```{r}
+# Problem04:
+mean04 <- c(82.52, 73.48, 91.325)
+sd04 <- c(9.24, 9.97, 8.34)
+n04 <- c(15,15,15)
+stress<- data.frame(mean04,sd04,n04)
+stress
+
+#install.packages("rpsychi")
+library(rpsychi)
+with(stress, ind.oneway.second(mean04,sd04,n04))
+
+# The output includes the F value. 
+#Calculate the pvalue using pf(fvalue,dfbetween, dfwithin, loer.tail=F)
+
+pf(14.087, 2, 42, lower.tail=F)
+
+# Interpret the result:
+# As the p-value is less than the significance level 0.05, we accept H1 - the mean of atleast one group is different.
+# We can conclude that there are significant differences between the groups.
+
+
+# **** Alternate method
+set.seed(123) 
+control <- rnorm(15, mean = 82.52, sd = 9.24)
+pets <- rnorm(15, mean = 73.48, sd = 9.97)
+friends <- rnorm(15, mean = 91.325, sd = 8.34)
+
+stress01<- data.frame(control,pets,friends)
+stress01
+# merge data
+#install.packages("reshape")
+library(reshape)
+stress01.m = melt(stress01, measure.vars = c("control", "pets","friends"))
+View(stress01.m)
+# rename columns
+names(stress01.m) = c("variable","value")
+
+# summary stats
+library(dplyr)
+group_by(stress01.m, variable) %>%
+  summarise(
+    count = n(),
+    mean = mean(value, na.rm = TRUE),
+    sd = sd(value, na.rm = TRUE)
+  )
+# Graphical visualization - boxplot
+library(ggplot2)
+ggplot(stress01.m) + geom_boxplot(aes(x=variable, y=value, fill=variable))
+# One way ANOVA
+res.aov <- aov(value ~ variable, data = stress01.m)
+# Summary of the analysis
+summary(res.aov)
+
+# The output includes the columns F value and Pr(>F) corresponding to the p-value of the test.
+# Interpret the result of one-way ANOVA tests
+# As the p-value is less than the significance level 0.05, we accept H1 - the mean of atleast one group is different.
+# We can conclude that there are significant differences between the groups.
+
+#****************************************************************
+
+```
+
+```{r}
+# Problem05:
+#fstat = 1.895
+#num = 4-1 = 3
+#deno = 40 - 4 = 36
+
+#Calculate the pvalue using pf(fvalue,dfbetween, dfwithin, loer.tail=F)
+
+pf(1.895, 3,36, lower.tail=F)
+
+# Interpret the result:
+# As the p-value is greater than the significance level 0.05, we accept H0.
+# We can conclude that there is no significant differences between the groups.
+
+#****************************************************************
+
+```
+
+```{r}
+# Problem06:
+mean06 <- c(0.3, 0.24,0.41,0.33)
+sd06 <- c(0.12,0.089,0.1,0.054)
+n06 <- c(5,5,4,6)
+choro<- data.frame(mean06,sd06,n06)
+choro
+
+#install.packages("rpsychi")
+library(rpsychi)
+with(choro, ind.oneway.second(mean06,sd06,n06))
+
+# The output includes the F value. 
+#Calculate the pvalue using pf(fvalue,dfbetween, dfwithin, loer.tail=F)
+
+pf(2.657, 3,16, lower.tail=F)
+
+# Interpret the result:
+# As the p-value is greater than the significance level 0.05, we accept H0.
+# We can conclude that there is no significant differences between the groups.
+
+#****************************************************************
+
+```
+

@@ -1,0 +1,20 @@
+#Two Factor ANOVA/ANCOVA from Paul Green
+setwd("E:/Python/Data Science R/Lecture4")
+mydata4=read.csv("paul-newfeed.csv", header=TRUE)
+attach(mydata4)
+mydata4
+names(mydata4)
+Sales=Sales1+Sales2+Sales3
+Price=factor(PriceLevel, levels=c(1,2,3),labels=c("LowPrice", "MediumPrice", "HighPrice"))
+Advertisement=factor(AdLevel,levels=c(1,2),labels=c("LowAd", "HighAd"))
+ANOVAMain=aov(Sales~Price+Advertisement)
+print(summary(ANOVAMain), digits=10)
+interaction.plot(Price,Advertisement,Sales, col=c("Red","Blue"),main="Interaction between Price and Advertisement")
+ANOVAInter=aov(Sales~Price+Advertisement+Price*Advertisement)
+print(summary(ANOVAInter), digits=10)
+cor(Sales,StoreSize)
+cor.test(Sales,StoreSize)
+ANCOVA=aov(Sales~StoreSize+Price+Advertisement+Price*Advertisement)
+print(summary(ANCOVA), digits=10)
+library(car)
+print(ANCOVA,type="II",digits=10)
